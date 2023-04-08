@@ -1,18 +1,17 @@
 import string
 
-# german_freq = [16.11, 10.33, 9.05, 6.72, 6.34, 6.23, 5.6, 5.2, 4.17, 3.7, 3.4, 3.24, 2.94, 2.8,
-#               2.32, 2.19, 1.71, 1.39, 1.36, 1.33, 0.92, 0.84, 0.64, 0.51, 0.36, 0.19, 0.19, 0.11, 0.07, 0.06]
 german_freq = {'E': 16.11, 'N': 10.33, 'I': 9.05, 'R': 6.72, 'T': 6.34, 'S': 6.23, 'A': 5.60,
                'H': 5.20, 'D': 4.17, 'U': 3.70, 'C': 3.40, 'L': 3.24, 'G': 2.94, 'M': 2.80,
                'O': 2.32, 'B': 2.19, 'F': 1.71, 'W': 1.39, 'Z': 1.36, 'K': 1.33, 'V': 0.92,
                'P': 0.84, 'J': 0.19, 'X': 0.11, 'Q': 0.07, 'Y': 0.06}
 
 # AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+# AZL = len(AZ)  # Length of Alphabet
 ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
 cipherKey = "FWQGCZXUGP"
 
 
-# AZL = len(AZ)  # Length of Alphabet
+
 
 class Decrypter:
     key = list("GOEPNXCVFJSHRZDITWALKUQBMY")

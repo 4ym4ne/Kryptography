@@ -11,8 +11,6 @@ def calculate_a_frequency():
                 frequency[charToCompare] += 1
             else:
                 frequency[charToCompare] = 1
-        else:
-            continue
     return frequency
 
 # Relative Häufigkeit

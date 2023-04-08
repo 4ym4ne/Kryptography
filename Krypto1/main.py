@@ -25,6 +25,3 @@ def calculate_r_frequency(mylist):
 list = calculate_a_frequency()
 print(list)
 print(calculate_r_frequency(list))
-
-
-

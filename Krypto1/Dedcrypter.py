@@ -77,7 +77,8 @@ class Decrypter:
                 sum += self.calculate_ic(substring)
 
             print("length ", key_range, "I.C: ", sum / (cut_from + 1))
-            if (sum / (cut_from + 1) >= 0.06):
+
+            if sum/(cut_from+1) >= 0.06:
                 key_length = key_range
                 print("LENGTH OF THE KEY IS ", key_length)
                 return key_length

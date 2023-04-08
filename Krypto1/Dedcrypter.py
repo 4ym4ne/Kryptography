@@ -16,15 +16,12 @@ cipherKey = "FWQGCZXUGP"
 class Decrypter:
     key = list("GOEPNXCVFJSHRZDITWALKUQBMY")
 
-    # Standard index of coincidence for English.
-    ENGLISH_IC = 0.076
+    # Standard index of coincidence for german.
+    GERMAN_IC = 0.076
 
     def __init__(self, path):
         with open(path, 'r') as f:
             self.chiffrat = f.read()
-            text = "123456789"
-            var = text[1:len(text):1]
-            print(var)
 
     def calculate_a_frequency(self, text):
         frequency = {letter: 0 for letter in ALPHABET}
@@ -148,6 +145,7 @@ class Decrypter:
 
 if __name__ == '__main__':
     decrypter = Decrypter("chiffrat2.txt")
+    assert decrypter.restore_key(decrypter.chiffrat, 10) == "FWQGCZXUGP", "Should be FWQGCZXUGP"
     # print(decrypter.restore_key(decrypter.chiffrat, 10))
     # print(decrypter.get_text_matrix(decrypter.chiffrat))
     # print(decrypter.vigenere_decode(decrypter.chiffrat, "FWQGCZXUGP"))

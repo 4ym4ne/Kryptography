@@ -1,8 +1,4 @@
-import collections
 import string
-from collections import Counter
-from math import fmod
-import numpy as np
 
 #german_freq = [16.11, 10.33, 9.05, 6.72, 6.34, 6.23, 5.6, 5.2, 4.17, 3.7, 3.4, 3.24, 2.94, 2.8,
 #               2.32, 2.19, 1.71, 1.39, 1.36, 1.33, 0.92, 0.84, 0.64, 0.51, 0.36, 0.19, 0.19, 0.11, 0.07, 0.06]

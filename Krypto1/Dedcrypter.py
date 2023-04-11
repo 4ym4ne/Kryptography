@@ -3,8 +3,6 @@ german_freq = {'E': 16.11, 'N': 10.33, 'I': 9.05, 'R': 6.72, 'T': 6.34, 'S': 6.2
                'O': 2.32, 'B': 2.19, 'F': 1.71, 'W': 1.39, 'Z': 1.36, 'K': 1.33, 'V': 0.92,
                'P': 0.84, 'J': 0.19, 'X': 0.11, 'Q': 0.07, 'Y': 0.06}
 
-# AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-# AZL = len(AZ)  # Length of Alphabet
 ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
 cipherKey = "FWQGCZXUGP"
 
@@ -95,7 +93,7 @@ class Decrypter:
     def _find_key_letter(self, text, lfreq):
         key_letter = ''
         max_corr = 00
-        for count, letter in enumerate(string.ascii_uppercase):
+        for count, letter in enumerate(ALPHABET):
             shifted = self.shift(text=text, amount=count)
             # print(shifted)
             corr = self._corr(text=shifted, lfreq=lfreq)
@@ -124,7 +122,7 @@ class Decrypter:
             for group_count in range(len(blocks)):
                 column += blocks[group_count][letter_count]
             columns.append(column)
-        print(columns)
+        #print(columns)
         return columns
 
     def vigenere_decode(self, chiffrat, key):

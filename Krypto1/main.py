@@ -29,7 +29,8 @@ def calculate_r_frequency(mylist):
     frequency = {}
     for char in mylist:
         frequency[char] = round((mylist[char] / total) * 100, 2)
-    return sort_list(frequency, order=1)
+    #return sort_list(frequency, order=1)
+    return dict(sorted(frequency.items()))
 
 
 def sort_list(dictionary, order):

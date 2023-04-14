@@ -3,9 +3,9 @@ german_freq = {'E': 16.11, 'N': 10.33, 'I': 9.05, 'R': 6.72, 'T': 6.34, 'S': 6.2
                'O': 2.32, 'B': 2.19, 'F': 1.71, 'W': 1.39, 'Z': 1.36, 'K': 1.33, 'V': 0.92,
                'P': 0.84, 'J': 0.19, 'X': 0.11, 'Q': 0.07, 'Y': 0.06}
 
-english_freq = {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33,
+english_freq =    {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33,
                   'H': 6.09,'R': 5.99, 'L': 4.25, 'D': 4.03, 'C': 2.76, 'U': 2.78, 'M': 2.41,
-                  'W': 2.23, 'F': 2.02,'G': 2.36, 'Y': 2.02, 'P': 1.93, 'B': 1.49, 'V': 0.98,
+                  'W': 2.23, 'F': 2.02, 'G': 2.36, 'Y': 2.02, 'P': 1.93, 'B': 1.49, 'V': 0.98,
                   'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.09, 'Z': 0.07}
 
 ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
@@ -21,6 +21,7 @@ class Decrypter:
     def __init__(self, path):
         with open(path, 'r') as f:
             self.chiffrat = f.read()
+        self.version = self.chiffrat
 
     def calculate_a_frequency(self, text):
         frequency = {letter: 0 for letter in ALPHABET}
@@ -36,16 +37,19 @@ class Decrypter:
         for char in text:
             if char in ALPHABET:
                 frequency[char] = (a_frequency[char] / total)
-        #return self.sort_list(frequency, order=0)
-        return dict(sorted(frequency.items()))
 
-    def sort_list(self, dictionary, order):
-        return {k: v for k, v in sorted(dictionary.items(), key=lambda x: -x[order])}
+        return dict(sorted(frequency.items(), key=lambda x: -x[1]))
+        #return dict(sorted(frequency))
+
+    def guess_key(self):
+        letter_freq = self.calculate_r_frequency(self.chiffrat)
+        print(letter_freq)
+        mapping = {key1: key2 for key1, key2 in zip(letter_freq, english_freq)}
+        self.decrypt_sub(self.chiffrat, mapping)
 
 
     def get_bigrams(self):
         bigrams = {}
-
         for i in range(len(self.chiffrat) - 1):
 
             curr_big = self.chiffrat[i:i+2]
@@ -55,14 +59,22 @@ class Decrypter:
                 else:
                     bigrams[curr_big] = 1
 
-        return self.sort_list(bigrams)
+        return dict(sorted(bigrams.items(), key=lambda x: -x[1]))
 
+    def print_by_letter_freq(self):
+        res = self.chiffrat
+        for k, v in zip(self.calculate_r_frequency(self.chiffrat), english_freq):
+            res = res.replace(k, v)
+        return res
 
+    def print_version(self, before, after):
+        version = self.version.replace(before, after)
+        print(version)
 
-    def decrypt_sub(self, toDecrypt):
+    def decrypt_sub(self, toDecrypt, key):
         decrypted_output = ""
         # letter_mapping = {key1: key2 for key1, key2 in zip(letter_, en_letter_freq.keys())}
-        letter_mapping = {key1: key2 for key1, key2 in zip(ALPHABET, self.key)}
+        letter_mapping = {key1: key2 for key1, key2 in zip(ALPHABET, key)}
         print(letter_mapping)
 
         for char in toDecrypt:
@@ -71,6 +83,8 @@ class Decrypter:
             else:
                 decrypted_output += char
         return decrypted_output
+
+    #############################################################
 
     def calculate_ic(self, text):
         cipher_len = len(text)
@@ -82,7 +96,6 @@ class Decrypter:
 
         return freqsum / (cipher_len * (cipher_len - 1))
 
-    #################################################
 
     def find_key_length(self):
         for key_range in range(2, 20):
@@ -103,7 +116,7 @@ class Decrypter:
                 print("LENGTH OF THE KEY IS ", key_length)
                 return key_length
 
-    #################################################
+
 
     def shift(self, text, amount):
         shifted = ''
@@ -166,12 +179,22 @@ class Decrypter:
 
 if __name__ == '__main__':
     decrypter = Decrypter("chiffrat.txt")
+    print(decrypter.guess_key())
+    #print(decrypter.print_by_letter_freq())
 
-    decrypter.get_bigrams()
+
+
+
+
+
+
+
+    #print(decrypter.get_bigrams())
+
+    #decrypter.print_version("PE", "TH")
 
     #print(decrypter.find_key_length())
     #assert decrypter.restore_key(decrypter.chiffrat, 10) == "FWQGCZXUGP", "Should be FWQGCZXUGP"
     #print(decrypter.restore_key(decrypter.chiffrat, 10))
     #print(decrypter.vigenere_decode(decrypter.chiffrat, "FWQGCZXUGP"))
-
     # print(decrypter.decrypt_sub(decrypter.chiffrat))

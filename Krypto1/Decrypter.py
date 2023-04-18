@@ -144,10 +144,10 @@ class Decrypter:
 
 
 
-    def shift(self, text, amount):
+    def shift(self, text, i):
         shifted = ''
         for letter in text:
-            shifted += ALPHABET[(ALPHABET.index(letter) - amount) % len(ALPHABET)]
+            shifted += ALPHABET[(ALPHABET.index(letter) - i) % len(ALPHABET)]
         return shifted
 
     def _corr(self, text, lfreq):
@@ -157,13 +157,13 @@ class Decrypter:
         key_letter = ''
         max_corr = 00
         for count, letter in enumerate(ALPHABET):
-            shifted = self.shift(text=text, amount=count)
+            shifted = self.shift(text=text, i=count)
             corr = self._corr(text=shifted, lfreq=lfreq)
             print(shifted, " ===> ", corr)
             if corr > max_corr:
                 max_corr = corr
                 key_letter = letter
-        print("Key: ",key_letter,"Max  ===> ", max_corr)
+        print("Key: ", key_letter, "Max  ===> ", max_corr)
 
         return key_letter
 
@@ -180,10 +180,10 @@ class Decrypter:
         " get the Vektor from the text blocks"
         blocks = [text[i:i + size] for i in range(0, len(text) - size, size)]
         columns = []
-        for letter_count in range(len(blocks[0])):
+        for letter_c in range(len(blocks[0])):
             column = ''
-            for group_count in range(len(blocks)):
-                column += blocks[group_count][letter_count]
+            for group_c in range(len(blocks)):
+                column += blocks[group_c][letter_c]
             columns.append(column)
         return columns
 
@@ -206,13 +206,6 @@ if __name__ == '__main__':
     decrypter = Decrypter("chiffrat.txt")
     print(decrypter.guess_key())
     #print(decrypter.print_by_letter_freq())
-
-
-
-
-
-
-
 
     #print(decrypter.get_bigrams())
 

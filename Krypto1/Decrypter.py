@@ -1,14 +1,19 @@
+import itertools
+from itertools import product, permutations
+
 german_freq = {'E': 16.11, 'N': 10.33, 'I': 9.05, 'R': 6.72, 'T': 6.34, 'S': 6.23, 'A': 5.60,
                'H': 5.20, 'D': 4.17, 'U': 3.70, 'C': 3.40, 'L': 3.24, 'G': 2.94, 'M': 2.80,
                'O': 2.32, 'B': 2.19, 'F': 1.71, 'W': 1.39, 'Z': 1.36, 'K': 1.33, 'V': 0.92,
                'P': 0.84, 'J': 0.19, 'X': 0.11, 'Q': 0.07, 'Y': 0.06}
 
-english_freq =    {'E': 12.70, 'T': 9.06, 'A': 8.17, 'O': 7.51, 'I': 6.97, 'N': 6.75, 'S': 6.33,
-                  'H': 6.09,'R': 5.99, 'L': 4.25, 'D': 4.03, 'C': 2.76, 'U': 2.78, 'M': 2.41,
-                  'W': 2.23, 'F': 2.02, 'G': 2.36, 'Y': 2.02, 'P': 1.93, 'B': 1.49, 'V': 0.98,
+english_freq =    {'E': 13.0, 'T': 9.10, 'A': 8.2, 'O': 7.5, 'I': 6.97, 'N': 6.75, 'S': 6.33,
+                  'H': 6.09, 'R': 5.99, 'D': 4.25, 'L': 4.03, 'C': 2.76, 'U': 2.78, 'M': 2.4,
+                  'W': 2.4, 'F': 2.02, 'G': 2.36, 'Y': 2.02, 'P': 1.93, 'B': 1.49, 'V': 0.98,
                   'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.09, 'Z': 0.07}
 
 ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
+
+
 
 
 
@@ -17,11 +22,15 @@ class Decrypter:
 
     # Standard index of coincidence for german.
     GERMAN_IC = 0.076
+    ENGLISH_IC = 0.06
 
     def __init__(self, path):
         with open(path, 'r') as f:
             self.chiffrat = f.read()
         self.version = self.chiffrat
+
+    def get_english_frequency(self):
+        return english_freq
 
     def calculate_a_frequency(self, text):
         frequency = {letter: 0 for letter in ALPHABET}
@@ -36,7 +45,7 @@ class Decrypter:
         frequency = {}
         for char in text:
             if char in ALPHABET:
-                frequency[char] = (a_frequency[char] / total)
+                frequency[char] = round((a_frequency[char] / total)*100, 2)
 
         return dict(sorted(frequency.items(), key=lambda x: -x[1]))
         #return dict(sorted(frequency))
@@ -44,8 +53,26 @@ class Decrypter:
     def guess_key(self):
         letter_freq = self.calculate_r_frequency(self.chiffrat)
         print(letter_freq)
-        mapping = {key1: key2 for key1, key2 in zip(letter_freq, english_freq)}
-        self.decrypt_sub(self.chiffrat, mapping)
+        print(english_freq)
+
+        mapping = {}
+        my_list = list(english_freq.keys())
+
+        for i, key in enumerate(letter_freq):
+            # mapping each letter in a dic
+            if 1 < i < len(letter_freq)-2:
+                mapping[key] = {my_list[i-2], my_list[i-1], my_list[i], my_list[i+1], my_list[i+2]}
+            elif i <= 1:
+                mapping[key] = {my_list[i]}
+            elif i == len(letter_freq)-1:
+                mapping[key] = {my_list[i - 4], my_list[i - 3], my_list[i -2], my_list[i - 1], my_list[i]}
+            elif i == len(letter_freq)-2:
+                mapping[key] = {my_list[i - 3], my_list[i - 2], my_list[i -1], my_list[i], my_list[i+1]}
+
+
+        # print the keys
+        dicta = dict(sorted(mapping.items()))
+        print(dicta)
 
 
     def get_bigrams(self):
@@ -107,9 +134,8 @@ class Decrypter:
                 # Summe der gesamsten IC der substring
 
                 sum += self.calculate_ic(substring)
-                #print(str(sum) + " ", end="")
 
-            print("length ", key_range, "I.C: ", sum / (cut_from + 1))
+            print("length ", key_range, " # I.C: ", sum / (cut_from + 1))
 
             if sum/(cut_from+1) >= 0.07:
                 key_length = key_range
@@ -132,13 +158,13 @@ class Decrypter:
         max_corr = 00
         for count, letter in enumerate(ALPHABET):
             shifted = self.shift(text=text, amount=count)
-            print(shifted)
             corr = self._corr(text=shifted, lfreq=lfreq)
-            print(corr)
+            print(shifted, " ===> ", corr)
             if corr > max_corr:
                 max_corr = corr
                 key_letter = letter
-        print(key_letter, max_corr)
+        print("Key: ",key_letter,"Max  ===> ", max_corr)
+
         return key_letter
 
     def restore_key(self, cyphertext, key_len):
@@ -159,7 +185,6 @@ class Decrypter:
             for group_count in range(len(blocks)):
                 column += blocks[group_count][letter_count]
             columns.append(column)
-        #print(columns)
         return columns
 
     def vigenere_decode(self, chiffrat, key):

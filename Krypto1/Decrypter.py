@@ -1,6 +1,3 @@
-import itertools
-from itertools import product, permutations
-
 german_freq = {'E': 16.11, 'N': 10.33, 'I': 9.05, 'R': 6.72, 'T': 6.34, 'S': 6.23, 'A': 5.60,
                'H': 5.20, 'D': 4.17, 'U': 3.70, 'C': 3.40, 'L': 3.24, 'G': 2.94, 'M': 2.80,
                'O': 2.32, 'B': 2.19, 'F': 1.71, 'W': 1.39, 'Z': 1.36, 'K': 1.33, 'V': 0.92,
@@ -12,9 +9,6 @@ english_freq =    {'E': 13.0, 'T': 9.10, 'A': 8.2, 'O': 7.5, 'I': 6.97, 'N': 6.7
                   'K': 0.77, 'J': 0.15, 'X': 0.15, 'Q': 0.09, 'Z': 0.07}
 
 ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
-
-
-
 
 
 class Decrypter:

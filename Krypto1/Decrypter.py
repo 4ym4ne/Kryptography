@@ -12,10 +12,10 @@ ALPHABET = [chr(char) for char in range(ord('A'), ord('Z') + 1)]
 
 
 class Decrypter:
-    key = list("GOEPNXCVFJSHRZDITWALKUQBMY")
 
     # Standard index of coincidence for german.
     GERMAN_IC = 0.076
+    # Standard index of coincidence for english.
     ENGLISH_IC = 0.06
 
     def __init__(self, path):
@@ -194,19 +194,3 @@ class Decrypter:
             key_index = (key_index + 1) % len(key)
 
         return plaintext
-
-
-if __name__ == '__main__':
-    decrypter = Decrypter("chiffrat.txt")
-    print(decrypter.guess_key())
-    #print(decrypter.print_by_letter_freq())
-
-    #print(decrypter.get_bigrams())
-
-    #decrypter.print_version("PE", "TH")
-
-    #print(decrypter.find_key_length())
-    #assert decrypter.restore_key(decrypter.chiffrat, 10) == "FWQGCZXUGP", "Should be FWQGCZXUGP"
-    #print(decrypter.restore_key(decrypter.chiffrat, 10))
-    #print(decrypter.vigenere_decode(decrypter.chiffrat, "FWQGCZXUGP"))
-    # print(decrypter.decrypt_sub(decrypter.chiffrat))
